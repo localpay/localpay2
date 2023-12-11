@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>지역사랑상품권 검색</title>
+        <title>종이형 지역사랑상품권 판매&middot;환전 지점정보 조회</title>
         <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -11,7 +11,7 @@
     </head>
     <body>
         <nav class="navbar navbar-expand shadow bg-white" style="height:60px">
-            <div class="navbar-title mx-3">지역사랑상품권 가맹점 정보 조회</div>
+            <div class="navbar-title mx-3">지류 지역사랑상품권 판매&middot;환전 지점정보 조회</div>
         </nav>
         
         <div class="container-fluid pt-3">
@@ -21,20 +21,26 @@
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12 col-md-4 col-lg-5">
-                                    <div class="mb-3">
-                                        <label class="form-label" for="keyword-input">가맹점명</label>
-                                        <input type="text" id="keywordInput" class="form-control keyword-input desktop" name="keyword">
+                                    <label for="branchTypeSale" class="form-label">유형 선택</label>
+                                    <div class="d-flex mb-3">
+                                        <div class="form-check me-3">
+                                            <input class="form-check-input" type="radio" name="branchTypeRadio" id="branchTypeSale" value="sale" checked>
+                                            <label class="form-check-label" for="branchTypeSale">
+                                                판매지점
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="branchTypeRadio" id="branchTypeExchange" value="exchange">
+                                            <label class="form-check-label" for="branchTypeExchange">
+                                                환전지점
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-4 col-lg-5">
                                     <div class="mb-3">
-                                        <label for="giftTypeSelect" class="form-label">상품권 종류</label>
-                                        <select id="giftTypeSelect" class="form-control" name="giftType">
-                                            <option value="">선택</option>
-                                            <option value="01">카드</option>
-                                            <option value="02">모바일</option>
-                                            <option value="03">지류</option>
-                                        </select>
+                                        <label class="form-label" for="keyword-input">지점명</label>
+                                        <input type="text" id="keywordInput" class="form-control keyword-input desktop" name="keyword">
                                     </div>
                                 </div>
                                 <div class="col-12 col-md-4 col-lg-2">

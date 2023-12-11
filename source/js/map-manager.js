@@ -7,6 +7,7 @@ var MapManager = function(options) {
   this.map;
 
   this.listRenderer = new ListItemRenderer({});
+  this.dataManager = this.options.dataManager;
   
   this.curLocMarkerImage = this.createMarkerImage(40, 40, './img/current_location.png');
   this.curLocPointMap = {};
@@ -262,7 +263,7 @@ MapManager.prototype.renderFranchises = function(totalCount, franchises, franchi
 
   self.removeAllCluster();
   self.removeAllFranchiseMarkers();
-  self.renderFranchiseMarkerInMap(franchisesMap);
+  self.renderFranchiseMarkerInMap(franchisesMap); 
 
   self.listRenderer.renderItems(totalCount, franchises);
   self.showSameNameFranchise(franchises);
@@ -406,7 +407,7 @@ MapManager.prototype.showFranchiseContent = function(franchise) {
   self.showClickMarker();
 
   self.bottomContentWrap.classList.remove('d-none');
-  self.bottomContentWrap.innerHTML = self.listRenderer.getItemHTML(franchise);
+  self.bottomContentWrap.innerHTML = self.listRenderer.getItemHTML(self.dataManager.getFranchiseById(franchise.id));
 
   self.map.panTo(self.franchiseMarkerPointMap[latLon]);
   self.map.setLevel(3);

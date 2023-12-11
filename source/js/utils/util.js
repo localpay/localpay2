@@ -36,7 +36,6 @@ function addCommas(num) {
 }
 
 function nullToEmpty(str) {
-    
     return str ? str : "";
 }
 
@@ -67,4 +66,10 @@ function formatPhoneNumber(phone) {
     }
 
     return result;
+}
+
+function dateFormat(str) {
+  var result = `${str.slice(0,4)}.${str.slice(4,6)}.${str.slice(6,8)}`;
+
+  return result;
 }

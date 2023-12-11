@@ -1,17 +1,23 @@
 var DataManager = function(options) {
   this.options = _.defaults(options, {});
 
-  this.fetchURL = 'https://apis.data.go.kr/B190001/localFranchises/franchise';
-
   this.defaultPage = 1;
   this.defaultPerPage = 2000;
 
   this.page = this.defaultPage;
   this.perPage = this.defaultPerPage;
   this.keyword = '';
-  this.giftCardType = '03';
+  this.branchType = 'sale';
 
   this.init();
+}
+
+DataManager.prototype.getFetchUrl = function() {
+  var self = this;
+
+  return self.branchType == 'sale' ?
+    'https://apis.data.go.kr/B190001/paperSale/sale' :
+    'https://apis.data.go.kr/B190001/paperExchange/exchange';
 }
 
 DataManager.prototype.fetchData = async function() {
@@ -53,24 +59,14 @@ DataManager.prototype.appendData = async function(res) {
   self.totalCount = res.matchCount;
   self.data = self.data.concat(_.map(res.data, function(d) {
     var result = {
-      id: `${d["brno"]}_${d["frcs_zip"]}`,
-      brno: d["brno"],
+      id: `${d["brnch_id"]}`,
       distance: geoDistance(d["lat"], d["lot"], self.lat, self.lon),
-      frcsAddr: nullToEmpty(d["frcs_addr"]),
-      frcsDtlAddr: nullToEmpty(d["frcs_dtl_addr"]),
-      frcsNm: d["frcs_nm"],
-      frcsRegSe: d["frcs_reg_se"],
-      frcsRegSeNm: d["frcs_reg_se_nm"],
-      frcsRprsTelno: formatPhoneNumber(d["frcs_rprs_telno"]),
-      frcsStlmInfoSe: d["frcs_stlm_info_se"],
-      frcsStlmInfoSeNm: d["frcs_stlm_info_se_nm"],
-      fullAddress: `${nullToEmpty(d["frcs_addr"])} ${nullToEmpty(d["frcs_dtl_addr"])}`,
-      location: {lat: d["lat"], lon: d["lot"]},
-      onlDlvyEntUseYn: d["onl_dlvy_ent_use_yn"],
-      pprFrcsAplyYn: d["ppr_frcs_aply_yn"],
-      pvsnInstCd: d["pvsn_inst_cd"],
-      teGdsHdYn: d["te_gds_hd_yn"],
-      usageRgnCd: d["usage_rgn_cd"],
+      frcsAddr: nullToEmpty(d["brnch_addr"]),
+      frcsDtlAddr: nullToEmpty(d["brnch_daddr"]),
+      frcsNm: d["brnch_nm"],
+      frcsRprsTelno: formatPhoneNumber(d["brnch_rprs_telno"]),
+      fullAddress: `${nullToEmpty(d["brnch_addr"])} ${nullToEmpty(d["brnch_daddr"])}`,
+      location: {lat: d["lat"], lon: d["lot"]}
     };
 
     return result;
@@ -87,20 +83,16 @@ DataManager.prototype.callAPI = async function() {
   // API 검색조건 설정: 자세한 호출방법은 https://www.data.go.kr/data/15119539/openapi.do 참고
   var requestJSON = {
     serviceKey: apiServiceKey,
-    // "cond[lat::GT]": -360,    // 위경도 없는 데이터 제외할 경우 사용
-    // "cond[lot::GT]": -360,    // 위경도 없는 데이터 제외할 경우 사용
-    // // "cond[bzmn_stts::EQ]": "01", // 사업자 상태가 '계속' 인 경우만 조회 시 사용
     page: self.page,
     perPage: self.perPage,
   };
-  if (self.keyword) requestJSON["cond[frcs_nm::LIKE]"] = self.keyword;
-  if (self.giftCardType) requestJSON["cond[frcs_stlm_info_se::LIKE]"] = self.giftCardType;
-  if (usageRgnCd) requestJSON["cond[usage_rgn_cd::EQ]"] = usageRgnCd;
+  if (self.keyword) requestJSON["cond[brnch_nm::LIKE]"] = self.keyword;
+  if (usageRgnCd) requestJSON["cond[emd_cd::LIKE]"] = usageRgnCd;
   
 
   return new Promise( function (resolve, reject) {
     $.ajax({
-      url: `${self.fetchURL}?${new URLSearchParams(requestJSON).toString()}`,
+      url: `${self.getFetchUrl()}?${new URLSearchParams(requestJSON).toString()}`,
       method: "GET",
       success: function(res) {
         resolve(res);
@@ -134,22 +126,10 @@ DataManager.prototype.setRelationType = function(relationType) {
   self.relationType = relationType;
 }
 
-DataManager.prototype.setGiftCardType = function(giftCardType) {
+DataManager.prototype.setBranchType = function(branchType) {
   var self = this;
 
-  self.giftCardType = giftCardType;
-}
-
-DataManager.prototype.setTopLeft = function(topLeft) {
-  var self = this;
-
-  self.topLeft = topLeft;
-}
-
-DataManager.prototype.setBottomRight = function(bottomRight) {
-  var self = this;
-
-  self.bottomRight = bottomRight;
+  self.branchType = branchType;
 }
 
 DataManager.prototype.setLocation = function(location) {
@@ -182,16 +162,35 @@ DataManager.prototype.aggregateSameLocationMap = function() {
 DataManager.prototype.getFranchiseById = function(id) {
   var self = this;
 
-  var franchise;
-  for (var datum of self.data) {
-      if (datum.id === id) {
-          franchise = datum;
-          break;
+  var franchise = _.find(self.data, {'id': id});
+  
+  if (!franchise.stocks) {
+    var requestJSON = {serviceKey: apiServiceKey, page: 1, perPage: 1000};
+    requestJSON['cond[brnch_id::EQ]'] = id;
+
+    $.ajax({
+      url: `https://apis.data.go.kr/B190001/paperStock/stock?${new URLSearchParams(requestJSON).toString()}`,
+      method: `GET`,
+      async: false,
+      success: function(res) {
+        var stocks = [];
+        _.forEach(res.data, function(d) {
+          stocks.push({
+            crtrYmd: d['crtr_ymd'],
+            gtType: d['gt_type_dnmn'],
+            gtQty: d['gt_type_stc_qty']
+          });
+        });
+        stocks = _.sortBy(stocks, ['gtType']);
+        franchise.stocks = stocks.reverse();
+      },
+      error: function(e) {
+        console.error(e);
       }
+    });
   }
 
   return franchise;
-
 }
 
 

@@ -20,11 +20,12 @@ var LocalVoucherManager = function(options) {
     this.dataManager = new DataManager({});
     this.mapManager = new MapManager({
         mapId: this.options.container.mapId,
+        dataManager: this.dataManager,
     });
     this.init();
 }
 
-LocalVoucherManager.prototype.searchFranchises = async function(keyword, giftCardType) {
+LocalVoucherManager.prototype.searchFranchises = async function(keyword, branchType) {
     var self = this;
 
     self.spinner.startLoading();
@@ -33,7 +34,7 @@ LocalVoucherManager.prototype.searchFranchises = async function(keyword, giftCar
 
     self.dataManager.setInitPage();
     self.dataManager.setKeyword(keyword);
-    self.dataManager.setGiftCardType(giftCardType);
+    self.dataManager.setBranchType(branchType);
     self.dataManager.setLocation(self.mapManager.getMapLatLon());
 
     var [totalCount, franchises, franchiseMap] = await self.dataManager.fetchData();
@@ -65,7 +66,7 @@ LocalVoucherManager.prototype.initRenderMap = async function() {
 
     self.mapManager.createMap(initLocation);
     self.mapManager.renderCurrentMarker(initLocation);
-    await self.searchFranchises('');
+    await self.searchFranchises('', 'sale');
 }
 
 LocalVoucherManager.prototype.init = function() {
@@ -113,8 +114,8 @@ LocalVoucherManager.prototype.init = function() {
         e.stopPropagation();
         
         var keyword = document.getElementById("keywordInput").value;
-        var giftCardType = document.getElementById("giftTypeSelect").value;
+        var branchType = document.querySelector("input[name='branchTypeRadio']:checked").value
 
-        await self.searchFranchises(keyword, giftCardType);
+        await self.searchFranchises(keyword, branchType);
     });
 }

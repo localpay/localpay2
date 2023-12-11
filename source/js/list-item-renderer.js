@@ -76,12 +76,23 @@ ListItemRenderer.prototype.getItemHTML = function(place) {
   var $name = $(`<div class="d-flex mt-2 mb-1"><div class="list-item-title me-1">${place.frcsNm}</div></div>`);
   var $phone = $(`<div class="item-phone">${place.frcsRprsTelno ? place.frcsRprsTelno : '전화번호 없음'}</div>`);
   var $addr = $(`<div class="mb-2" style="word-break:keep-all;">${place.frcsAddr}&nbsp;${place.frcsDtlAddr}</div>`);
-  var $type = $(`<div class='d-flex'><div class='type-item me-1'>${place.frcsStlmInfoSeNm}</div></div>`);
+  var $type = $(`<div class='d-inline-block main-card'>`);
+
+  var crtrYmd = '';
+  _.forEach(place.stocks, function(st, idx) {
+    var content = $(`<span class='d-inline-block badge stock-badge'>${addCommas(st.gtType)}원권: ${addCommas(st.gtQty)}개</span>`)
+    $type.append(content);
+
+    if (crtrYmd < st.crtrYmd) crtrYmd = st.crtrYmd;
+    if (place.stocks.length == idx + 1) {
+      $type.append($(`<div>(${dateFormat(crtrYmd)} 기준)</div>`))
+    }
+  });
   
   $row.append($name);
   $row.append($phone);
   $row.append($addr);
-  $row.append($type);
+  if (place.stocks) $row.append($type);
 
   $container.append($row);
   $li.append($container);

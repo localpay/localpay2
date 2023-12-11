@@ -1,18 +1,20 @@
-지역사랑상품권 가맹점기본정보 API 활용 예시 코드
+지류 지역사랑상품권 판매&middot;환전 지점 및 재고 정보 API 활용 예시 코드
 ======================
 
-본 페이지는 한국조폐공사에서 개방한 가맹점기본정보 API를 활용하여 지도에서 검색할 수 있도록 만든 예시코드입니다.
+본 페이지는 한국조폐공사에서 개방한 지류 지역사랑상품권 API 들을 활용하여 지도에서 검색할 수 있도록 만든 예시코드입니다.
 
 # Repository
 [https://github.com/localpay/paper](https://github.com/localpay/paper)
 
 # 예시 화면
 ![예시 화면][screen_sample]
-
+ 
 
 # 사용한 데이터
-[공공데이터포털 한국조폐공사_통합_가맹점기본정보 ][komsco_api] - 해당 API의 활용신청을 통해 API KEY 를 발급
-
+아래 각 API의 활용신청을 통해 API KEY 를 발급
+ * [공공데이터포털 한국조폐공사_지류_지역사랑상품권_판매지점정보 ][sale_api]
+ * [공공데이터포털 한국조폐공사_지류_지역사랑상품권_환전지점정보 ][exchange_api]
+ * [공공데이터포털 한국조폐공사_지류_지역사랑상품권_지점별_재고정보 ][stock_api]
 # 그외 외부 서비스
 [카카오지도 API][kakao_map_api] 
  * 키 발급 방법:
@@ -53,7 +55,9 @@ index.html 파일을 더블클릭하여 브라우저로 실행
 ![한국조폐공사][komsco_logo]
 
 
-[komsco_api]: https://www.data.go.kr/data/15119539/openapi.do "공공데이터포털 한국조폐공사 통합가맹점기본정보"
+[sale_api]: https://www.data.go.kr/data/15125218/openapi.do "공공데이터포털 한국조폐공사 지류 지역사랑상품권 판매지점정보"
+[exchange_api]: https://www.data.go.kr/data/15125219/openapi.do "공공데이터포털 한국조폐공사 지류 지역사랑상품권 환전지점정보"
+[stock_api]: https://www.data.go.kr/data/15125382/openapi.do "공공데이터포털 한국조폐공사 지류 지역사랑상품권 지점별 재고정보"
 [kakao_map_api]: https://apis.map.kakao.com/ "카카오 지도 API"
 [komsco_logo]: ./ref/komsco_logo.jpg "한국조폐공사"
 [screen_sample]: ./ref/screen_sample.png "화면 예시"
