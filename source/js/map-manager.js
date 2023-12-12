@@ -220,8 +220,6 @@ MapManager.prototype.showFranchiseContentsInMap = function(location, franchises)
   } else {
       self.showFranchisesNameList(location, franchises);
   }
-
-  self.map.panTo(self.createLatLngLocation(location.lat, location.lon));
 }
 
 MapManager.prototype.showFranchisesNameList = function(location, franchises) {
@@ -237,6 +235,9 @@ MapManager.prototype.showFranchisesNameList = function(location, franchises) {
   if (grandParentWrapper) {
       grandParentWrapper.classList.add('marker-wrap');
   }
+
+  self.map.setLevel(3);
+  self.map.panTo(self.createLatLngLocation(location.lat, location.lon));
 }
 
 MapManager.prototype.hideFranchiseContent = function() {
@@ -409,8 +410,8 @@ MapManager.prototype.showFranchiseContent = function(franchise) {
   self.bottomContentWrap.classList.remove('d-none');
   self.bottomContentWrap.innerHTML = self.listRenderer.getItemHTML(self.dataManager.getFranchiseById(franchise.id));
 
-  self.map.panTo(self.franchiseMarkerPointMap[latLon]);
   self.map.setLevel(3);
+  self.map.panTo(self.franchiseMarkerPointMap[latLon]);
 }
 
 MapManager.prototype.setFranchiseMarker = function(franchise) {
