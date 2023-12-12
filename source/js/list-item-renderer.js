@@ -80,7 +80,13 @@ ListItemRenderer.prototype.getItemHTML = function(place) {
 
   var crtrYmd = '';
   _.forEach(place.stocks, function(st, idx) {
-    var content = $(`<span class='d-inline-block badge stock-badge'>${addCommas(st.gtType)}원권: ${addCommas(st.gtQty)}개</span>`)
+    st.gtQtyNm = '확인불가';
+    if (st.gtQty == 0) {
+      st.gtQtyNm = "없음";
+    } else if (st.gtQty == 1) {
+      st.gtQtyNm = "있음";
+    }
+    var content = $(`<span class='d-inline-block badge stock-badge'>${addCommas(st.gtType)}원권: ${addCommas(st.gtQtyNm)}</span>`)
     $type.append(content);
 
     if (crtrYmd < st.crtrYmd) crtrYmd = st.crtrYmd;
