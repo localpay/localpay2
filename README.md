@@ -84,6 +84,9 @@ index.html 파일을 더블클릭하여 브라우저로 실행
 * `source directory` 소스코드
 * `ref directory` 참고자료
 
+# 수정 사항
+* [Changelog][changelog] 참고
+
 # 문의
 * 주소: 한국조폐공사 대전광역시 유성구 과학로 80-67(가정동)
 * 연락처: 042-870-1462
@@ -98,3 +101,4 @@ index.html 파일을 더블클릭하여 브라우저로 실행
 [kakao_map_api]: https://apis.map.kakao.com/ "카카오 지도 API"
 [komsco_logo]: ./ref/komsco_logo.jpg "한국조폐공사"
 [screen_sample]: ./ref/screen_sample.png "화면 예시"
+[changelog]:  ./CHANGELOG.md "수정 사항"
