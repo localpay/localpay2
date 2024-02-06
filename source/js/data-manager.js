@@ -16,8 +16,8 @@ DataManager.prototype.getFetchUrl = function() {
   var self = this;
 
   return self.branchType == 'sale' ?
-    'https://apis.data.go.kr/B190001/paperSale/sale' :
-    'https://apis.data.go.kr/B190001/paperExchange/exchange';
+    'https://apis.data.go.kr/B190001/paperSale/v2/saleV2' :
+    'https://apis.data.go.kr/B190001/paperExchange/v2/exchangeV2';
 }
 
 DataManager.prototype.fetchData = async function() {
@@ -169,7 +169,7 @@ DataManager.prototype.getFranchiseById = function(id) {
     requestJSON['cond[brnch_id::EQ]'] = id;
 
     $.ajax({
-      url: `https://apis.data.go.kr/B190001/paperStock/stock?${new URLSearchParams(requestJSON).toString()}`,
+      url: `https://apis.data.go.kr/B190001/paperStock/v2/stockV2?${new URLSearchParams(requestJSON).toString()}`,
       method: `GET`,
       async: false,
       success: function(res) {
